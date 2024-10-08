@@ -7,7 +7,23 @@ import Button, { BUTTON_TYPES } from "../../components/Button";
 const mockContactApi = () => new Promise((resolve) => { setTimeout(resolve, 500); });
 
 const Form = ({ onSuccess, onError }) => {
+  const [formData, setFormData] = useState({
+    nom: '',
+    prenom: '',
+    type: '',
+    email: '',
+    message: ''
+  });
+
   const [sending, setSending] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const sendContact = useCallback(
     async (evt) => {
@@ -29,24 +45,47 @@ const Form = ({ onSuccess, onError }) => {
     <form onSubmit={sendContact}>
       <div className="row">
         <div className="col">
-          <Field placeholder="" label="Nom" />
-          <Field placeholder="" label="Prénom" />
+          <Field
+            placeholder="Nom"
+            label="Nom"
+            name="nom"
+            value={formData.nom}
+            onChange={handleChange}
+          />
+          <Field
+            placeholder="Prénom"
+            label="Prénom"
+            name="prenom"
+            value={formData.prenom}
+            onChange={handleChange}
+          />
           <Select
             selection={["Personel", "Entreprise"]}
-            onChange={() => null}
             label="Personel / Entreprise"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
             type="large"
             titleEmpty
           />
-          <Field placeholder="" label="Email" />
+          <Field
+            placeholder="Email"
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
           <Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
             {sending ? "En cours" : "Envoyer"}
           </Button>
         </div>
         <div className="col">
           <Field
-            placeholder="message"
+            placeholder="Message"
             label="Message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
             type={FIELD_TYPES.TEXTAREA}
           />
         </div>
@@ -66,5 +105,3 @@ Form.defaultProps = {
 };
 
 export default Form;
-
-
